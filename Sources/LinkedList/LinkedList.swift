@@ -302,7 +302,7 @@ public extension LinkedList {
 
 //MARK: - BidirectionalCollection Conformance
 extension LinkedList: BidirectionalCollection {
-    public var last: Element? {
+    var last: Element? {
         return tail
     }
     

@@ -6,7 +6,8 @@ final class LinkedListTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        var list: LinkedList = [1,2,3,4,5]
+        let list: LinkedList = [1,2,3,4,5]
+        print(list)
     }
 
     static var allTests = [
