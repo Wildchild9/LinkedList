@@ -12,8 +12,25 @@ public struct LinkedList<Element> {
     
     private var headNode: Node?
     private var tailNode: Node?
+    
+    /// The number of elements in the linked list.
+    ///
+    /// - Complexity: O(1)
     public private(set) var count: Int = 0
     private var id = ID()
+    
+    /// Creates a new, empty linked list.
+    ///
+    /// This is equivalent to initializing a linked list with an empty array literal.
+    /// For example:
+    ///
+    ///     var emptyLinkedList = LinkedList<Int>()
+    ///     print(emptyLinkedList.isEmpty)
+    ///     // Prints "true"
+    ///
+    ///     emptyLinkedList = []
+    ///     print(emptyLinkedList.isEmpty)
+    ///     // Prints "true"
     public init() { }
     
     fileprivate class ID {
@@ -48,11 +65,11 @@ public extension LinkedList {
         count = chain.count
     }
     
-    init<S>(_ sequence: S) where S: Sequence, S.Element == Element {
-        if let linkedList = sequence as? LinkedList<Element> {
+    init<S>(_ elements: S) where S: Sequence, S.Element == Element {
+        if let linkedList = elements as? LinkedList<Element> {
             self = linkedList
         } else {
-            self = LinkedList(chain(of: sequence))
+            self = LinkedList(chain(of: elements))
         }
     }
     
@@ -60,7 +77,7 @@ public extension LinkedList {
 
 //MARK: Chain of Nodes
 extension LinkedList {
-    // Creates a chain of nodes from a sequence. Returns `nil` if the sequence is empty.
+    /// Creates a chain of nodes from a sequence. Returns `nil` if the sequence is empty.
     private func chain<S>(of sequence: S) -> (head: Node, tail: Node, count: Int)? where S: Sequence, S.Element == Element {
         var iterator = sequence.makeIterator()
         var head, tail: Node
@@ -159,10 +176,16 @@ extension LinkedList {
 
 //MARK: - Computed Properties
 public extension LinkedList {
+    /// The element at the head (start) of the linked list.
+    ///
+    /// - Note: This value is the same as `.first`.
     var head: Element? {
         return headNode?.value
     }
     
+    /// The element at the tail (end) of the linked list.
+    ///
+    /// - Note: This value is the same as `.last`.
     var tail: Element? {
         return tailNode?.value
     }
@@ -274,15 +297,51 @@ extension LinkedList: MutableCollection {
 
 //MARK: - LinkedList Specific Operations
 public extension LinkedList {
-    
+    /// Adds an element to the start of the linked list.
+    ///
+    /// The following example adds a new number to a linked list of integers:
+    ///
+    ///     var numbers = [0, 1, 2, 3, 4, 5]
+    ///     numbers.prepend(0)
+    ///
+    ///     print(numbers)
+    ///     // Prints "[0, 1, 2, 3, 4, 5]"
+    ///
+    /// - Parameter newElement: The element to prepend to the collection.
+    ///
+    /// - Complexity: O(1)
     mutating func prepend(_ newElement: Element) {
         replaceSubrange(startIndex..<startIndex, with: CollectionOfOne(newElement))
     }
     
+    /// Adds the elements of a sequence or collection to the start of this
+    /// linked list.
+    ///
+    /// The following example prepends the elements of a `Range<Int>` instance to
+    /// a linked list of integers:
+    ///
+    ///     var numbers: LinkedList = [1, 2, 3, 4, 5]
+    ///     numbers.append(contentsOf: -5...0)
+    ///     print(numbers)
+    ///     // Prints "[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]"
+    ///
+    /// - Parameter newElements: The elements to prepend to the collection.
+    ///
+    /// - Complexity: O(*m*), where *m* is the length of `newElements`.
     mutating func prepend<S>(contentsOf newElements: __owned S) where S: Sequence, S.Element == Element {
         replaceSubrange(startIndex..<startIndex, with: newElements)
     }
     
+    /// Removes and returns the first element of the collection.
+    ///
+    /// Calling this method may invalidate all saved indices of this
+    /// collection. Do not rely on a previously stored index value after
+    /// altering a collection with any operation that can change its length.
+    ///
+    /// - Returns: The first element of the collection if the collection is not
+    /// empty; otherwise, `nil`.
+    ///
+    /// - Complexity: O(1)
     @discardableResult
     mutating func popFirst() -> Element? {
         if isEmpty {
@@ -450,5 +509,17 @@ extension LinkedList: ExpressibleByArrayLiteral {
 extension LinkedList: CustomStringConvertible {
     public var description: String {
         return "[" + lazy.map { "\($0)" }.joined(separator: ", ") + "]"
+    }
+}
+
+//MARK: - Equatable Conformance
+extension LinkedList: Equatable where Element: Equatable {
+    static func ==(lhs: LinkedList<Element>, rhs: LinkedList<Element>) -> Bool {
+        for (a, b) in zip(lhs, rhs) {
+            guard a == b else {
+                return false
+            }
+        }
+        return true
     }
 }
