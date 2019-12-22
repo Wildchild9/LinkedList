@@ -29,3 +29,7 @@ Clone the repository and add or copy `LinkedList.swift` to your project. It has 
 ## Dependencies
 
 None.
+
+## License
+
+[MIT license](https://github.com/Wildchild9/LinkedList/blob/master/LICENSE).
