@@ -514,7 +514,7 @@ extension LinkedList: CustomStringConvertible {
 
 //MARK: - Equatable Conformance
 extension LinkedList: Equatable where Element: Equatable {
-    static func ==(lhs: LinkedList<Element>, rhs: LinkedList<Element>) -> Bool {
+    public static func ==(lhs: LinkedList<Element>, rhs: LinkedList<Element>) -> Bool {
         for (a, b) in zip(lhs, rhs) {
             guard a == b else {
                 return false
