@@ -2,15 +2,24 @@ import XCTest
 @testable import LinkedList
 
 final class LinkedListTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        let list: LinkedList = [1,2,3,4,5]
-        print(list)
+    func testPopFirst() {
+        var list: LinkedList = [1, 2, 3, 4, 5]
+        let firstElement = list.popFirst()
+        
+        XCTAssertEqual(firstElement, 1)
+        XCTAssertTrue(list.elementsEqual([2, 3, 4, 5]))
     }
-
+    
+    func testPopLast() {
+        var list: LinkedList = [1, 2, 3, 4, 5]
+        let lastElement = list.popLast()
+        
+        XCTAssertEqual(lastElement, 5)
+        XCTAssertTrue(list.elementsEqual([1, 2, 3, 4]))
+    }
+    
     static var allTests = [
-        ("testExample", testExample),
+        ("testPopFirst", testPopFirst),
+        ("testPopLast", testPopLast)
     ]
 }
