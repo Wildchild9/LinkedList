@@ -106,6 +106,7 @@ extension LinkedList {
 extension LinkedList {
     
     private mutating func copyNodes(settingNodeAt index: Index, to value: Element) {
+        id = ID()
         
         var currentIndex = startIndex
         var currentNode = Node(value: currentIndex == index ? value : currentIndex.node!.value)
