@@ -430,13 +430,13 @@ extension LinkedList: RangeReplaceableCollection {
                 headNode = range.upperBound.node!
                 headNode!.previous = nil
                 
-                // Move tail back if deletion ends at end index
+            // Move tail back if deletion ends at end index
             } else if range.upperBound == endIndex {
                 // Can force unwrap since lowerBound index must have an associated element
                 tailNode = range.lowerBound.node!.previous
                 tailNode!.next = nil
                 
-                // Deletion range is in the middle of the linked list
+            // Deletion range is in the middle of the linked list
             } else {
                 // Can force unwrap all bound nodes since they both must have elements
                 range.upperBound.node!.previous = range.lowerBound.node!.previous
