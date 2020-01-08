@@ -239,7 +239,7 @@ extension LinkedList: Collection {
     }
     
     public func index(after i: Index) -> Index {
-        precondition(i.listID === self.id, "LinkedList index is invalid")
+        precondition(i.isMember(of: self), "LinkedList index is invalid")
         precondition(i.offset != endIndex.offset, "LinkedList index is out of bounds")
         return Index(node: i.node?.next, offset: i.offset + 1, id: id)
     }
@@ -253,6 +253,14 @@ extension LinkedList: Collection {
             self.node = node
             self.offset = offset
             self.listID = id
+        }
+        
+        
+        /// A Boolean value indicating whether the index is a member of `linkedList`.
+        ///
+        /// - Parameter linkedList: the list being check for indxe membership.
+        fileprivate func isMember(of linkedList: LinkedList) -> Bool {
+            return listID === linkedList.id
         }
         
         public static func ==(lhs: Index, rhs: Index) -> Bool {
@@ -272,7 +280,7 @@ extension LinkedList: MutableCollection {
     
     public subscript(position: Index) -> Element {
         get {
-            precondition(position.listID === self.id, "LinkedList index is invalid")
+            precondition(position.isMember(of: self), "LinkedList index is invalid")
             precondition(position.offset != endIndex.offset, "Index out of range")
             guard let node = position.node else {
                 preconditionFailure("LinkedList index is invalid")
@@ -280,7 +288,7 @@ extension LinkedList: MutableCollection {
             return node.value
         }
         set {
-            precondition(position.listID === self.id, "LinkedList index is invalid")
+            precondition(position.isMember(of: self), "LinkedList index is invalid")
             precondition(position.offset != endIndex.offset, "Index out of range")
             
             // Copy-on-write semantics for nodes
@@ -291,6 +299,12 @@ extension LinkedList: MutableCollection {
             }
         }
     }
+    
+//    public mutating func swapAt(_ i: LinkedList<Element>.Index, _ j: LinkedList<Element>.Index) {
+//        if !isKnownUniquelyReferenced(&headNode) {
+//
+//        }
+//    }
 }
 
 
@@ -366,7 +380,7 @@ extension LinkedList: BidirectionalCollection {
     }
     
     public func index(before i: Index) -> Index {
-        precondition(i.listID === self.id, "LinkedList index is invalid")
+        precondition(i.isMember(of: self), "LinkedList index is invalid")
         precondition(i.offset != startIndex.offset, "LinkedList index is out of bounds")
         if i.offset == count {
             return Index(node: tailNode, offset: i.offset - 1, id: id)
@@ -385,7 +399,7 @@ extension LinkedList: RangeReplaceableCollection {
     public mutating func replaceSubrange<S, R>(_ subrange: R, with newElements: __owned S) where S: Sequence, R: RangeExpression, Element == S.Element, Index == R.Bound {
         
         var range = subrange.relative(to: indices)
-        precondition(range.lowerBound.listID === id && range.upperBound.listID === id, "LinkedList range of indices are invalid")
+        precondition(range.lowerBound.isMember(of: self) && range.upperBound.isMember(of: self), "LinkedList range of indices are invalid")
         precondition(range.lowerBound >= startIndex && range.upperBound <= endIndex, "Subrange bounds are out of range")
         
         // If range covers all elements and the new elements are a LinkedList then set references to it
